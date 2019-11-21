@@ -6,6 +6,7 @@
 package swingadadofavan;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.*;
 
 /**
@@ -14,6 +15,7 @@ import javax.swing.table.*;
  */
 public class SwingadaDoFavan extends javax.swing.JFrame {
     ArrayList<Departamento> listaDep;
+    ArrayList<Funcionario> listaFunc;
     String botao;
     
     /**
@@ -22,10 +24,11 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
     public SwingadaDoFavan() {
         initComponents();
         listaDep = new ArrayList();
+        listaFunc = new ArrayList();
         setLocationRelativeTo(null);
     }
 
-    public void CarregaTblDep(){
+    public void carregaTblDep(){
         int i;
         DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Codigo","Nome"},0);
         
@@ -39,9 +42,38 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
         tblDep.getColumnModel().getColumn(0).setPreferredWidth(80);
         tblDep.getColumnModel().getColumn(1).setResizable(false);
         tblDep.getColumnModel().getColumn(1).setPreferredWidth(420);
+        
+        carregaCBDep();
     }
     
-    public void EstadoComponente(String n){
+    public void carregaTblFunc(){
+        int i;
+        DefaultTableModel modelo = new DefaultTableModel(new Object[]{"Codigo","Nome","Departamento"},0);
+        
+        for(i=0;i<listaFunc.size();i++){
+            Object linha[] = new Object[]{listaFunc.get(i).getMatricula(), listaFunc.get(i).getNome(), listaFunc.get(i).getDep().getNome()};
+            modelo.addRow(linha);
+        }
+        
+        tblFunc.setModel(modelo);
+        tblFunc.getColumnModel().getColumn(0).setResizable(false);
+        tblFunc.getColumnModel().getColumn(0).setPreferredWidth(80);
+        tblFunc.getColumnModel().getColumn(1).setResizable(false);
+        tblFunc.getColumnModel().getColumn(1).setPreferredWidth(210);
+        tblFunc.getColumnModel().getColumn(2).setResizable(false);
+        tblFunc.getColumnModel().getColumn(2).setPreferredWidth(210);
+    }
+    
+    public void carregaCBDep(){
+        cbDepFunc.removeAllItems();
+        cbDepFunc.addItem("Selecione");
+        
+        for(int i=0;i<listaDep.size();i++){
+            cbDepFunc.addItem(listaDep.get(i).getNome());
+        }
+    }
+    
+    public void estadoComponenteDep(String n){
         switch(n){
             case "salvar":
                 btnSaveDep.setEnabled(false);
@@ -50,12 +82,18 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
                 txtFNomeDep.setEnabled(false);
                 txtFCodigoDep.setText("");
                 txtFNomeDep.setText("");
+                btnNewDep.setEnabled(true);
                 break;
             case "novo":
                 btnSaveDep.setEnabled(true);
                 btnCancelDep.setEnabled(true);
                 txtFCodigoDep.setEnabled(true);
                 txtFNomeDep.setEnabled(true);
+                btnEdtDep.setEnabled(false);
+                btnNewDep.setEnabled(false);
+                btnDelDep.setEnabled(false);
+                txtFCodigoDep.setText("");
+                txtFNomeDep.setText("");
                 break;
             case "cancelar":
                 btnSaveDep.setEnabled(false);
@@ -64,12 +102,9 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
                 txtFNomeDep.setEnabled(false);
                 txtFCodigoDep.setText("");
                 txtFNomeDep.setText("");
+                btnNewDep.setEnabled(true);
                 break;
             case "tabela":
-                btnSaveDep.setEnabled(false);
-                btnCancelDep.setEnabled(false);
-                txtFCodigoDep.setEnabled(false);
-                txtFNomeDep.setEnabled(false);
                 btnEdtDep.setEnabled(true);
                 btnDelDep.setEnabled(true);
                 break;
@@ -80,6 +115,7 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
                 txtFNomeDep.setEnabled(true);
                 btnEdtDep.setEnabled(false);
                 btnDelDep.setEnabled(false);
+                btnNewDep.setEnabled(false);
                 break;
             case "excluir":
                 btnSaveDep.setEnabled(false);
@@ -88,6 +124,71 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
                 txtFNomeDep.setEnabled(false);
                 btnEdtDep.setEnabled(false);
                 btnDelDep.setEnabled(false);
+                txtFCodigoDep.setText("");
+                txtFNomeFunc.setText("");
+                break;
+        }
+    }
+    
+    public void estadoComponenteFunc(String n){
+        switch(n){
+            case "salvar":
+                btnSaveFunc.setEnabled(false);
+                btnCancelFunc.setEnabled(false);
+                txtFMatFunc.setEnabled(false);
+                txtFNomeFunc.setEnabled(false);
+                cbDepFunc.setEnabled(false);
+                btnNewFunc.setEnabled(true);
+                txtFMatFunc.setText("");
+                txtFNomeFunc.setText("");
+                cbDepFunc.setSelectedIndex(0);
+                break;
+            case "novo":
+                btnSaveFunc.setEnabled(true);
+                btnCancelFunc.setEnabled(true);
+                txtFMatFunc.setEnabled(true);
+                txtFNomeFunc.setEnabled(true);
+                cbDepFunc.setEnabled(true);
+                btnNewFunc.setEnabled(false);
+                txtFMatFunc.setText("");
+                txtFNomeFunc.setText("");
+                cbDepFunc.setSelectedIndex(0);
+                break;
+            case "cancelar":
+                txtFMatFunc.setEnabled(false);
+                btnCancelFunc.setEnabled(false);
+                btnSaveFunc.setEnabled(false);
+                txtFMatFunc.setEnabled(false);
+                txtFNomeFunc.setEnabled(false);
+                cbDepFunc.setEnabled(false);
+                btnNewFunc.setEnabled(true);
+                txtFMatFunc.setText("");
+                txtFNomeFunc.setText("");
+                cbDepFunc.setSelectedIndex(0);
+                break;
+            case "tabela":
+                btnEdtFunc.setEnabled(true);
+                btnDelFunc.setEnabled(true);
+                break;
+            case "editar":
+                btnSaveFunc.setEnabled(true);
+                btnCancelFunc.setEnabled(true);
+                txtFMatFunc.setEnabled(true);
+                txtFNomeFunc.setEnabled(true);
+                btnEdtFunc.setEnabled(false);
+                btnDelFunc.setEnabled(false);
+                cbDepFunc.setEnabled(true);
+                break;
+            case "excluir":
+                btnSaveFunc.setEnabled(false);
+                btnCancelFunc.setEnabled(false);
+                txtFMatFunc.setEnabled(false);
+                txtFNomeFunc.setEnabled(false);
+                btnEdtFunc.setEnabled(false);
+                btnDelFunc.setEnabled(false);
+                txtFMatFunc.setText("");
+                txtFNomeFunc.setText("");
+                cbDepFunc.setSelectedIndex(0);
                 break;
         }
     }
@@ -117,7 +218,7 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
         btnEdtDep = new javax.swing.JButton();
         Func = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblDep1 = new javax.swing.JTable();
+        tblFunc = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         txtFMatFunc = new javax.swing.JTextField();
@@ -125,6 +226,8 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
         txtFNomeFunc = new javax.swing.JTextField();
         btnSaveFunc = new javax.swing.JButton();
         btnCancelFunc = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        cbDepFunc = new javax.swing.JComboBox<>();
         btnNewFunc = new javax.swing.JButton();
         btnDelFunc = new javax.swing.JButton();
         btnEdtFunc = new javax.swing.JButton();
@@ -303,8 +406,8 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
 
         Painel.addTab("Departamentos", Dep);
 
-        tblDep1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        tblDep1.setModel(new javax.swing.table.DefaultTableModel(
+        tblFunc.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        tblFunc.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -327,20 +430,20 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblDep1.getTableHeader().setReorderingAllowed(false);
-        tblDep1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblFunc.getTableHeader().setReorderingAllowed(false);
+        tblFunc.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblDep1MouseClicked(evt);
+                tblFuncMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(tblDep1);
-        if (tblDep1.getColumnModel().getColumnCount() > 0) {
-            tblDep1.getColumnModel().getColumn(0).setResizable(false);
-            tblDep1.getColumnModel().getColumn(0).setPreferredWidth(80);
-            tblDep1.getColumnModel().getColumn(1).setResizable(false);
-            tblDep1.getColumnModel().getColumn(1).setPreferredWidth(210);
-            tblDep1.getColumnModel().getColumn(2).setResizable(false);
-            tblDep1.getColumnModel().getColumn(2).setPreferredWidth(210);
+        jScrollPane2.setViewportView(tblFunc);
+        if (tblFunc.getColumnModel().getColumnCount() > 0) {
+            tblFunc.getColumnModel().getColumn(0).setResizable(false);
+            tblFunc.getColumnModel().getColumn(0).setPreferredWidth(80);
+            tblFunc.getColumnModel().getColumn(1).setResizable(false);
+            tblFunc.getColumnModel().getColumn(1).setPreferredWidth(210);
+            tblFunc.getColumnModel().getColumn(2).setResizable(false);
+            tblFunc.getColumnModel().getColumn(2).setPreferredWidth(210);
         }
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)), "Funcionario"));
@@ -379,24 +482,34 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
             }
         });
 
+        jLabel5.setText("Departamento:");
+
+        cbDepFunc.setEnabled(false);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtFNomeFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(txtFMatFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addComponent(btnSaveFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCancelFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtFNomeFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(txtFMatFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSaveFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCancelFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(46, 46, 46)
+                        .addComponent(cbDepFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -412,7 +525,11 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtFNomeFunc, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbDepFunc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         btnNewFunc.setText("Novo");
@@ -470,8 +587,8 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
                     .addComponent(btnDelFunc)
                     .addComponent(btnEdtFunc))
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         Painel.addTab("Funcionarios", Func);
@@ -498,15 +615,12 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
 
     private void btnCancelDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelDepActionPerformed
         botao = "cancelar";
-        EstadoComponente(botao);
+        estadoComponenteDep(botao);
     }//GEN-LAST:event_btnCancelDepActionPerformed
 
     private void btnNewDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewDepActionPerformed
-        txtFCodigoDep.setText("");
-        txtFNomeDep.setText("");
-        
         botao = "novo";
-        EstadoComponente(botao);
+        estadoComponenteDep(botao);
     }//GEN-LAST:event_btnNewDepActionPerformed
 
     private void btnSaveDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveDepActionPerformed
@@ -519,9 +633,10 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
             listaDep.get(i).setNome(txtFNomeDep.getText());
         }
         
-        CarregaTblDep();
+        carregaTblDep();
         
-        EstadoComponente("salvar");
+        botao = "salvar";
+        estadoComponenteDep(botao);
     }//GEN-LAST:event_btnSaveDepActionPerformed
 
     private void tblDepMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDepMouseClicked
@@ -532,13 +647,13 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
             txtFCodigoDep.setText(String.valueOf(dep.getCodigo()));
             txtFNomeDep.setText(dep.getNome());
             botao = "tabela";
-            EstadoComponente(botao);
+            estadoComponenteDep(botao);
         }
     }//GEN-LAST:event_tblDepMouseClicked
 
     private void btnEdtDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEdtDepActionPerformed
         botao = "editar";
-        EstadoComponente(botao);
+        estadoComponenteDep(botao);
     }//GEN-LAST:event_btnEdtDepActionPerformed
 
     private void btnDelDepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelDepActionPerformed
@@ -549,15 +664,22 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
             txtFNomeDep.setText("");
         }
         
-        CarregaTblDep();
+        carregaTblDep();
         
         botao = "excluir";
-        EstadoComponente(botao);
+        estadoComponenteDep(botao);
     }//GEN-LAST:event_btnDelDepActionPerformed
 
-    private void tblDep1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDep1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tblDep1MouseClicked
+    private void tblFuncMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblFuncMouseClicked
+        int i = tblFunc.getSelectedRow();
+        if(i>=0 && i<listaFunc.size()){
+            Funcionario func = listaFunc.get(i);
+            txtFMatFunc.setText(String.valueOf(func.getMatricula()));
+            txtFNomeFunc.setText(func.getNome());
+            botao = "tabela";
+            estadoComponenteFunc(botao);
+        }
+    }//GEN-LAST:event_tblFuncMouseClicked
 
     private void txtFMatFuncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFMatFuncActionPerformed
         // TODO add your handling code here:
@@ -568,23 +690,58 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
     }//GEN-LAST:event_txtFNomeFuncActionPerformed
 
     private void btnSaveFuncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveFuncActionPerformed
-        // TODO add your handling code here:
+        int i = cbDepFunc.getSelectedIndex();
+        
+        if(botao.equals("novo")){
+            if(i==0){
+                JOptionPane.showMessageDialog(this, "Selecione um departamento");
+            }else{
+                Funcionario func = new Funcionario();
+                func.setMatricula(Integer.parseInt(txtFMatFunc.getText()));
+                func.setNome(txtFNomeFunc.getText());
+             	func.setDep(listaDep.get(i-1));
+             
+                listaFunc.add(func);
+                listaDep.get(i-1).addFunc(func);
+            }
+        }else{
+            int index = tblFunc.getSelectedRow();
+            listaFunc.get(index).setMatricula(Integer.parseInt(txtFMatFunc.getText()));
+            listaFunc.get(index).setNome(txtFNomeFunc.getText());
+            //listaFunc.get(index).setDep();
+        }
+        
+        botao = "salvar";
+        estadoComponenteFunc(botao);
+        
+        carregaTblFunc();
     }//GEN-LAST:event_btnSaveFuncActionPerformed
 
     private void btnCancelFuncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelFuncActionPerformed
-        // TODO add your handling code here:
+        botao = "cancelar";
+        estadoComponenteFunc(botao);
     }//GEN-LAST:event_btnCancelFuncActionPerformed
 
     private void btnNewFuncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewFuncActionPerformed
-        // TODO add your handling code here:
+        botao = "novo";
+        estadoComponenteFunc(botao);
     }//GEN-LAST:event_btnNewFuncActionPerformed
 
     private void btnDelFuncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelFuncActionPerformed
-        // TODO add your handling code here:
+        int i = tblFunc.getSelectedRow();
+        if(i>=0 && i<listaFunc.size()){
+            listaFunc.remove(i);
+            
+            carregaTblFunc();
+        
+            botao = "excluir";
+            estadoComponenteFunc(botao);
+        }
     }//GEN-LAST:event_btnDelFuncActionPerformed
 
     private void btnEdtFuncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEdtFuncActionPerformed
-        // TODO add your handling code here:
+        botao = "editar";
+        estadoComponenteFunc(botao);
     }//GEN-LAST:event_btnEdtFuncActionPerformed
 
     /**
@@ -632,16 +789,18 @@ public class SwingadaDoFavan extends javax.swing.JFrame {
     private javax.swing.JButton btnNewFunc;
     private javax.swing.JButton btnSaveDep;
     private javax.swing.JButton btnSaveFunc;
+    private javax.swing.JComboBox<String> cbDepFunc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tblDep;
-    private javax.swing.JTable tblDep1;
+    private javax.swing.JTable tblFunc;
     private javax.swing.JTextField txtFCodigoDep;
     private javax.swing.JTextField txtFMatFunc;
     private javax.swing.JTextField txtFNomeDep;
